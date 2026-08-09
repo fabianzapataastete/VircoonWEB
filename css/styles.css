@@ -65,3 +65,45 @@ footer .footer-brand img{display:block;width:100%;height:100%;object-fit:contain
 /* Redes sociales del footer */
 .footer-bottom{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.12);padding-top:22px;display:flex;align-items:center;justify-content:space-between;gap:22px}.footer-bottom small{border-top:0;padding-top:0;color:#73909c}.footer-social{display:flex;align-items:center;justify-content:flex-end;gap:14px}.footer-social .social-link{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:white;background:rgba(255,255,255,.08);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 12px 24px rgba(0,0,0,.22);transition:transform .2s ease,background .2s ease,box-shadow .2s ease}.footer-social .social-link:hover{transform:translateY(-2px);background:rgba(36,230,211,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.32),0 16px 30px rgba(0,0,0,.28)}.footer-social svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 2px 2px rgba(0,0,0,.35))}.footer-social svg path,.footer-social svg rect,.footer-social svg circle{vector-effect:non-scaling-stroke}.footer-social .social-play{fill:currentColor;stroke:none}@media(max-width:560px){.footer-bottom{align-items:flex-start;flex-direction:column}.footer-social{justify-content:flex-start}}
 @media(max-width:900px){.site-wrap{padding-top:94px}}
+
+.page-hero .rotating-word{min-width:0}
+@media(max-width:560px){.page-hero .rotating-word{min-width:0;width:100%}}
+
+/* Rotacion en dos lineas para heroes internos */
+.page-hero .rotating-word-wrap{width:min(100%,7.8em);height:2.28em;line-height:1.02;vertical-align:-.18em}.page-hero .rotating-word-wrap .rotating-word-current,.page-hero .rotating-word-wrap .rotating-word-next,.page-hero .rotating-word-wrap .rotating-word-sizer{white-space:normal;line-height:1.02}.page-hero .rotating-word-wrap .rotating-word-current,.page-hero .rotating-word-wrap .rotating-word-next{width:100%}@media(max-width:560px){.page-hero .rotating-word-wrap{width:100%;height:2.45em}}
+
+/* Alineacion de heroes y CTA rotatorio */
+.hero,.page-hero.page-hero-visual,.contact-layout{min-height:calc(100vh - 108px)}
+.hero-copy{justify-content:flex-start;padding-top:96px}
+.page-hero.page-hero-visual{align-items:start;padding-top:96px;padding-bottom:60px}
+.contact-layout{align-items:start;padding-top:96px;padding-bottom:70px}
+.contact-intro h1{font-size:clamp(52px,6.5vw,88px);line-height:.96;letter-spacing:-.065em}
+.contact-intro .rotating-word{min-width:5.95em}
+@media(max-width:900px){.hero,.page-hero.page-hero-visual,.contact-layout{min-height:auto}.hero-copy,.page-hero.page-hero-visual,.contact-layout{padding-top:70px}.page-hero.page-hero-visual{padding-bottom:0}.contact-layout{padding-bottom:60px}}
+@media(max-width:560px){.contact-intro h1{font-size:48px}.contact-intro .rotating-word{min-width:0;width:100%}}
+
+
+/* Header consistente entre paginas */
+.site-header{height:108px;min-height:108px;max-height:108px;background:#fff}
+.site-wrap{padding-top:108px}
+@media(max-width:900px){.site-header{height:94px;min-height:94px;max-height:94px}.site-wrap{padding-top:94px}}
+
+
+/* Botones con icono estable */
+.button,.nav-cta{gap:14px;white-space:nowrap}
+.button .button-icon,.nav-cta .button-icon{width:24px;height:24px;border-radius:50%;display:inline-grid;place-items:center;flex:0 0 24px;font-size:15px;line-height:1;font-weight:900;transform:translateY(-1px)}
+.nav-cta .button-icon{background:rgba(255,255,255,.12);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
+.button.primary .button-icon{background:rgba(6,40,58,.12);color:var(--ink);box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+.button.primary:hover .button-icon,.nav-cta:hover .button-icon{transform:translate(2px,-3px)}
+
+
+/* Carrusel de etapas en Inicio */
+.trust-strip{overflow:hidden}
+.trust-strip .trust-carousel{display:block;gap:0;width:min(62vw,900px);overflow:hidden;position:relative;flex:0 1 900px;color:#84949b;font-size:11px;letter-spacing:.13em;font-weight:900}
+.trust-strip .trust-carousel-track{display:flex;width:100%;gap:0;transition:transform .7s cubic-bezier(.65,0,.35,1);will-change:transform}
+.trust-strip .trust-carousel-track.is-resetting{transition:none}
+.trust-strip .trust-carousel span{flex:0 0 33.333%;text-align:center;white-space:nowrap}
+.trust-strip .trust-carousel strong{font-size:1.45em;font-weight:950;color:var(--ink);letter-spacing:.02em;vertical-align:-.04em}
+@media(max-width:900px){.trust-strip{align-items:flex-start}.trust-strip .trust-carousel{width:100%;flex-basis:auto}}
+@media(max-width:560px){.trust-strip .trust-carousel{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.trust-strip .trust-carousel-track{transition:none;transform:none!important;flex-wrap:wrap;gap:18px}.trust-strip .trust-carousel{overflow:visible}.trust-strip .trust-carousel span[aria-hidden="true"]{display:none}.trust-strip .trust-carousel span{flex:0 0 auto;text-align:left}}

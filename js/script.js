@@ -11,14 +11,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-  const rotatingWord = document.querySelector('.rotating-word');
-  const rotatingWords = ['transforma.', 'funciona.', 'se aplica.', 'genera impacto.', 'deja huella.'];
-  let rotatingWordIndex = 0;
+  document.querySelectorAll('.rotating-word').forEach(rotatingWord => {
+    const rotatingWords = (rotatingWord.dataset.words || rotatingWord.textContent || '')
+      .split('|')
+      .map(word => word.trim())
+      .filter(Boolean);
+    let rotatingWordIndex = 0;
 
-  if (rotatingWord) {
+    if (!rotatingWords.length) return;
+    const shouldWrap = rotatingWord.dataset.wrap === 'true';
+    const sizer = document.createElement('span');
+    sizer.className = 'rotating-word-current rotating-word-sizer';
+    sizer.style.visibility = 'hidden';
+    sizer.style.position = 'absolute';
+    sizer.style.pointerEvents = 'none';
+    rotatingWord.appendChild(sizer);
+    const maxWidth = rotatingWords.reduce((width, word) => {
+      sizer.textContent = word;
+      return Math.max(width, sizer.offsetWidth);
+    }, 0);
+    sizer.remove();
+    if (maxWidth && !shouldWrap) rotatingWord.style.width = `${maxWidth}px`;
     rotatingWord.innerHTML = `<span class="rotating-word-current">${rotatingWords[0]}</span>`;
     window.setInterval(() => {
       const current = rotatingWord.querySelector('.rotating-word-current');
+      if (!current) return;
       rotatingWordIndex = (rotatingWordIndex + 1) % rotatingWords.length;
       const next = document.createElement('span');
       next.className = 'rotating-word-next is-entering';
@@ -30,12 +47,30 @@ document.addEventListener('DOMContentLoaded', () => {
         next.className = 'rotating-word-current';
       }, 780);
     }, 4000);
-  }
+  });
   document.querySelectorAll('.project-video').forEach(video => {
     video.addEventListener('contextmenu', event => event.preventDefault());
     video.addEventListener('dragstart', event => event.preventDefault());
   });
 
+  // Carrusel de etapas de Inicio
+  const trustCarousel = document.querySelector('.trust-carousel');
+  const trustTrack = document.querySelector('.trust-carousel-track');
+  const trustItems = Array.from(document.querySelectorAll('.trust-carousel span'));
+  if (trustCarousel && trustTrack && trustItems.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const visibleItems = 3;
+    const maxTrustIndex = Math.max(0, trustItems.length - visibleItems);
+    let trustIndex = 0;
+    const updateTrustCarousel = () => {
+      const itemWidth = trustCarousel.clientWidth / visibleItems;
+      trustTrack.style.transform = 'translateX(-' + (trustIndex * itemWidth) + 'px)';
+    };
+    window.setInterval(() => {
+      trustIndex = trustIndex === maxTrustIndex ? 0 : trustIndex + 1;
+      updateTrustCarousel();
+    }, 2600);
+    window.addEventListener('resize', updateTrustCarousel);
+  }
   const testimonialTrack = document.querySelector('.testimonial-track');
   const testimonialCards = Array.from(document.querySelectorAll('.testimonial-card'));
   const testimonialPrev = document.querySelector('[data-testimonial-prev]');
