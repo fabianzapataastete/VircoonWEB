@@ -89,18 +89,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const trustTrack = document.querySelector('.trust-carousel-track');
   const trustItems = Array.from(document.querySelectorAll('.trust-carousel span'));
   if (trustCarousel && trustTrack && trustItems.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const visibleItems = 3;
-    const maxTrustIndex = Math.max(0, trustItems.length - visibleItems);
+    const getVisibleTrustItems = () => {
+      if (window.matchMedia('(max-width: 560px)').matches) return 1;
+      if (window.matchMedia('(max-width: 900px)').matches) return 2;
+      return 3;
+    };
     let trustIndex = 0;
+    let visibleTrustItems = getVisibleTrustItems();
     const updateTrustCarousel = () => {
-      const itemWidth = trustCarousel.clientWidth / visibleItems;
+      visibleTrustItems = getVisibleTrustItems();
+      const maxTrustIndex = Math.max(0, trustItems.length - visibleTrustItems);
+      trustIndex = Math.min(trustIndex, maxTrustIndex);
+      trustItems.forEach(item => { item.style.flexBasis = (100 / visibleTrustItems) + '%'; });
+      const itemWidth = trustCarousel.clientWidth / visibleTrustItems;
       trustTrack.style.transform = 'translateX(-' + (trustIndex * itemWidth) + 'px)';
     };
     window.setInterval(() => {
+      const maxTrustIndex = Math.max(0, trustItems.length - getVisibleTrustItems());
       trustIndex = trustIndex === maxTrustIndex ? 0 : trustIndex + 1;
       updateTrustCarousel();
     }, 2600);
     window.addEventListener('resize', updateTrustCarousel);
+    updateTrustCarousel();
   }
   const testimonialTrack = document.querySelector('.testimonial-track');
   const testimonialCards = Array.from(document.querySelectorAll('.testimonial-card'));
