@@ -48,11 +48,42 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 780);
     }, 4000);
   });
-  document.querySelectorAll('.project-video').forEach(video => {
+  document.querySelectorAll('.project-video, .zoomable-video').forEach(video => {
     video.addEventListener('contextmenu', event => event.preventDefault());
     video.addEventListener('dragstart', event => event.preventDefault());
   });
 
+
+  // Zoom centrado para videos de proyectos y producto destacado
+  const projectVideos = Array.from(document.querySelectorAll('.project-video, .zoomable-video'));
+  if (projectVideos.length) {
+    const zoomOverlay = document.createElement('div');
+    zoomOverlay.className = 'video-zoom-overlay';
+    zoomOverlay.setAttribute('aria-hidden', 'true');
+    zoomOverlay.innerHTML = '<div class="video-zoom-frame"><video autoplay muted loop playsinline preload="metadata" controlslist="nodownload noplaybackrate" disablepictureinpicture oncontextmenu="return false" draggable="false"></video></div>';
+    document.body.appendChild(zoomOverlay);
+    const zoomVideo = zoomOverlay.querySelector('video');
+    const closeZoom = () => {
+      zoomOverlay.classList.remove('open');
+      zoomOverlay.setAttribute('aria-hidden', 'true');
+      zoomVideo.pause();
+      window.setTimeout(() => zoomVideo.removeAttribute('src'), 260);
+    };
+    projectVideos.forEach(video => {
+      video.addEventListener('click', event => {
+        event.preventDefault();
+        const source = video.currentSrc || video.querySelector("source")?.getAttribute("src");
+        if (!source) return;
+        zoomVideo.src = source;
+        zoomVideo.muted = true;
+        zoomVideo.play().catch(() => {});
+        zoomOverlay.setAttribute('aria-hidden', 'false');
+        zoomOverlay.classList.add('open');
+      });
+    });
+    zoomOverlay.addEventListener('click', closeZoom);
+    document.addEventListener('keydown', event => { if (event.key === 'Escape' && zoomOverlay.classList.contains('open')) closeZoom(); });
+  }
   // Carrusel de etapas de Inicio
   const trustCarousel = document.querySelector('.trust-carousel');
   const trustTrack = document.querySelector('.trust-carousel-track');
