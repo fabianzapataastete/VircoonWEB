@@ -49,6 +49,17 @@ Cada archivo está envuelto en `(function () { ... })();` (IIFE), por lo que sus
 
 Cuando la persona seleccione un diagnóstico desde la lista inicial, la aplicación activará sus cursos, preguntas y estadísticas finales.
 
+## Orden aleatorio de preguntas y alternativas
+
+Cada vez que alguien inicia un diagnóstico, `js/app.js` genera una copia de las preguntas con:
+
+- el orden de las preguntas mezclado, y
+- el orden de las alternativas de cada pregunta mezclado.
+
+Esto aplica automáticamente a **todos los diagnósticos**, actuales y futuros — no depende de cómo ordenes las preguntas ni las alternativas al escribirlas en `js/diagnostics/<tema>.js`. El objetivo es que dos personas que rindan el mismo diagnóstico vean las preguntas y las alternativas en un orden distinto, para que no puedan pasarse las respuestas por posición (ej. "la B siempre es la correcta").
+
+Los archivos de datos (`ia-generativa.js`, `excel-productividad.js`, etc.) no se modifican ni se reordenan; el mezclado ocurre solo en memoria, en cada intento, y no requiere ningún ajuste al crear un diagnóstico nuevo.
+
 ## Diagnósticos incluidos
 
 - Inteligencia Artificial Generativa (`js/diagnostics/ia-generativa.js`): 5 cursos, 50 preguntas.

@@ -5,7 +5,8 @@ const state = {
   participantName: "",
   selectedDiagnosticId: "",
   currentQuestionIndex: 0,
-  answers: []
+  answers: [],
+  activeQuestions: [] // copia mezclada (preguntas y alternativas) del intento actual
 };
 
 const screens = {
@@ -80,7 +81,8 @@ elements.startForm.addEventListener("submit", (event) => {
   const diagnostic = getActiveDiagnostic();
   state.participantName = name;
   state.currentQuestionIndex = 0;
-  state.answers = new Array(diagnostic.questions.length).fill(null);
+  state.activeQuestions = buildShuffledQuestions(diagnostic);
+  state.answers = new Array(state.activeQuestions.length).fill(null);
   showScreen("quiz");
   renderQuestion();
 });
@@ -99,7 +101,7 @@ elements.nextBtn.addEventListener("click", () => {
   }
 
   const diagnostic = getActiveDiagnostic();
-  if (state.currentQuestionIndex < diagnostic.questions.length - 1) {
+  if (state.currentQuestionIndex < state.activeQuestions.length - 1) {
     state.currentQuestionIndex += 1;
     renderQuestion();
   }
@@ -126,6 +128,7 @@ elements.finishBtn.addEventListener("click", () => {
 elements.restartBtn.addEventListener("click", () => {
   const diagnostic = getActiveDiagnostic();
   state.currentQuestionIndex = 0;
+  state.activeQuestions = [];
   state.answers = new Array(diagnostic.questions.length).fill(null);
   elements.participantName.value = "";
   showScreen("start");
@@ -157,6 +160,45 @@ function getActiveDiagnostic() {
   return (window.DIAGNOSTICS || []).find((diagnostic) => diagnostic.id === state.selectedDiagnosticId);
 }
 
+// Mezcla aleatoria genérica (Fisher-Yates). Aplica a cualquier diagnóstico,
+// actual o futuro, sin necesidad de tocar sus archivos individuales.
+function shuffleArray(array) {
+  const result = array.slice();
+  for (let i = result.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+// Crea una copia del banco de preguntas del diagnóstico con:
+// - el orden de las preguntas mezclado
+// - el orden de las alternativas de cada pregunta mezclado
+// El correctAnswer se recalcula para seguir apuntando a la alternativa correcta
+// en su nueva posición. Los datos originales de js/diagnostics/*.js no se modifican,
+// por lo que cada persona que rinde el diagnóstico recibe un orden distinto.
+function buildShuffledQuestions(diagnostic) {
+  const clonedQuestions = diagnostic.questions.map((question) => ({
+    ...question,
+    options: question.options.slice()
+  }));
+
+  const shuffledQuestions = shuffleArray(clonedQuestions);
+
+  shuffledQuestions.forEach((question) => {
+    const optionsWithFlag = question.options.map((option, index) => ({
+      option,
+      isCorrect: index === question.correctAnswer
+    }));
+    const shuffledOptions = shuffleArray(optionsWithFlag);
+
+    question.options = shuffledOptions.map((item) => item.option);
+    question.correctAnswer = shuffledOptions.findIndex((item) => item.isCorrect);
+  });
+
+  return shuffledQuestions;
+}
+
 function updateDiagnosticIntro() {
   const diagnostic = getActiveDiagnostic();
   if (!diagnostic) return;
@@ -174,7 +216,7 @@ function showScreen(screenName) {
 
 function renderQuestion() {
   const diagnostic = getActiveDiagnostic();
-  const questions = diagnostic.questions;
+  const questions = state.activeQuestions;
   const courses = diagnostic.courses;
   const question = questions[state.currentQuestionIndex];
   const course = courses.find((item) => item.id === question.courseId);
@@ -219,7 +261,7 @@ function highlightMissingAnswer() {
 
 function calculateResults() {
   const diagnostic = getActiveDiagnostic();
-  const questions = diagnostic.questions;
+  const questions = state.activeQuestions;
   const courseScores = diagnostic.courses.map((course) => {
     const courseQuestions = questions.filter((question) => question.courseId === course.id);
     const maxScore = courseQuestions.reduce((sum, question) => sum + question.weight, 0);
@@ -369,8 +411,14 @@ function renderResults(results) {
     elements.secondCourse.textContent = "";
   }
 
-  elements.strengths.textContent = formatCourseList(results.strengths);
-  elements.opportunities.textContent = formatCourseList(results.opportunities);
+  elements.strengths.textContent = formatCourseList(
+    results.strengths,
+    "No se identifican cursos o temáticas asimiladas en este diagnóstico."
+  );
+  elements.opportunities.textContent = formatCourseList(
+    results.opportunities,
+    "No se identifican brechas prioritarias en este diagnóstico."
+  );
   elements.courseResults.innerHTML = "";
 
   results.courseScores.forEach((course) => {
@@ -404,7 +452,7 @@ function renderResults(results) {
   elements.closingMessage.textContent = "Este resultado entrega una orientación profesional para planificar tu ruta de aprendizaje. Se recomienda iniciar por la recomendación principal y continuar avanzando desde las competencias ya dominadas.";
 }
 
-function formatCourseList(courses) {
-  if (!courses || courses.length === 0) return "No se identifican brechas prioritarias en este diagnóstico.";
+function formatCourseList(courses, emptyMessage) {
+  if (!courses || courses.length === 0) return emptyMessage || "No se identifican resultados en este diagnóstico.";
   return courses.map((course) => `${course.shortName} (${course.percentage}%)`).join(" y ");
 }
