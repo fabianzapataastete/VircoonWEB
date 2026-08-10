@@ -150,7 +150,8 @@ footer .footer-brand img{display:block;width:100%;height:100%;object-fit:contain
 .product-showcase .product-copy>.eyebrow span{width:24px;height:3px;background:var(--aqua);display:inline-block;flex:0 0 24px}
 
 
+/* Enlace de menú "Plataforma Diagnóstico" (antes LMS): ahora visible; usa el estilo base .nav-lms (botón tipo pill) */
+
 /* Ocultar enlaces LMS temporalmente: cambiar display:none por display:inline-flex/display:block para reactivar */
-.nav-lms,
 footer a[href*="vircoon.com/academia"],
 .contact-details div:has(a[href*="vircoon.com/academia"]){display:none!important}

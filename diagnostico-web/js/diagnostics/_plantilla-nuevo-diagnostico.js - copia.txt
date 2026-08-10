@@ -1,0 +1,81 @@
+// PLANTILLA — Copia este archivo para crear un nuevo diagnóstico.
+//
+// PASOS:
+// 1) Duplica este archivo dentro de js/diagnostics/ y renómbralo, por ejemplo:
+//    js/diagnostics/ciberseguridad.js
+// 2) Cambia la extensión de .js.txt a .js (este archivo termina en .js.txt
+//    a propósito, para que el navegador NO lo cargue mientras es solo una plantilla).
+// 3) Reemplaza el prefijo "TEMA_" por algo único de tu diagnóstico
+//    (ej: CIBER_COURSES, CIBER_QUESTIONS) para no chocar con otros diagnósticos.
+// 4) Completa los cursos y las preguntas más abajo.
+// 5) Agrega <script src="js/diagnostics/ciberseguridad.js"></script> en
+//    index_d.html, en cualquier orden, siempre ANTES de js/app.js.
+// ¡Eso es todo! No hay que tocar app.js, diagnostics.js ni ningún otro archivo.
+
+(function () {
+  window.DIAGNOSTICS = window.DIAGNOSTICS || [];
+
+  // ---- Cursos / módulos ----
+  // - id: identificador único del curso (debe coincidir con courseId en las preguntas).
+  // - priority: orden pedagógico, se usa para desempatar cursos con igual porcentaje.
+  // - shortName: nombre corto usado en etiquetas y resultados.
+  // - competencies: lista de competencias que cubre el curso.
+  // - commercialRecommendation: texto que se muestra al recomendar este curso.
+  const TEMA_COURSES = [
+    {
+      id: "modulo1",
+      priority: 1,
+      name: "Nombre completo del curso o módulo",
+      shortName: "Nombre corto",
+      description: "Descripción breve del curso o módulo.",
+      competencies: ["competencia 1", "competencia 2"],
+      commercialRecommendation: "Por qué recomendamos este curso a quien obtiene bajo puntaje aquí."
+    }
+    // Agrega más cursos/módulos siguiendo el mismo formato...
+  ];
+
+  // ---- Preguntas ----
+  // - courseId: debe coincidir con un id de TEMA_COURSES.
+  // - difficulty: "fácil" o "media".
+  // - weight: peso de la pregunta (por defecto 1).
+  // - correctAnswer: índice de la alternativa correcta, empezando en 0.
+  const TEMA_QUESTIONS = [
+    {
+      id: 1,
+      courseId: "modulo1",
+      competence: "Nombre de la competencia evaluada",
+      difficulty: "fácil",
+      weight: 1,
+      question: "Texto de la pregunta",
+      options: [
+        "Alternativa A",
+        "Alternativa B",
+        "Alternativa C",
+        "Alternativa D"
+      ],
+      correctAnswer: 0
+    }
+    // Agrega más preguntas siguiendo el mismo formato...
+  ];
+
+  // ---- Registro del diagnóstico ----
+  // id, name, title, description y duration se muestran en la lista inicial
+  // de diagnósticos y en el encabezado del diagnóstico seleccionado.
+  window.DIAGNOSTICS.push({
+    id: "id-unico-del-diagnostico",
+    name: "Nombre corto (aparece en la tarjeta de selección)",
+    title: "Diagnóstico de Competencias relevantes",
+    description: "Descripción que ve la persona antes de comenzar el diagnóstico.",
+    duration: "Duración estimada: 10 a 15 minutos",
+    resultLabel: "curso",
+    masteryThreshold: 70,
+    assimilationThreshold: 70,
+    useSequentialLevel: true,
+    recommendByPriority: true,
+    showOnlyMasteredStrengths: true,
+    maxRecommendations: 2,
+    maxStrengths: 2,
+    courses: TEMA_COURSES,
+    questions: TEMA_QUESTIONS
+  });
+})();
