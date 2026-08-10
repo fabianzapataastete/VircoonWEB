@@ -148,3 +148,9 @@ footer .footer-brand img{display:block;width:100%;height:100%;object-fit:contain
 /* Eyebrow consistente en producto destacado */
 .product-showcase .product-copy>.eyebrow{font-size:11px;line-height:1;font-weight:900;letter-spacing:.21em;margin:0 0 26px;max-width:none;color:var(--ink);text-transform:uppercase}
 .product-showcase .product-copy>.eyebrow span{width:24px;height:3px;background:var(--aqua);display:inline-block;flex:0 0 24px}
+
+
+/* Ocultar enlaces LMS temporalmente: cambiar display:none por display:inline-flex/display:block para reactivar */
+.nav-lms,
+footer a[href*="vircoon.com/academia"],
+.contact-details div:has(a[href*="vircoon.com/academia"]){display:none!important}
